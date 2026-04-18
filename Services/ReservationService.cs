@@ -43,10 +43,22 @@ public class ReservationService : IReservationService
         startTime < r.EndTime && endTime > r.StartTime);
   }
 
-    public async Task<List<ReservationResponse>> GetByDateAsync(DateOnly date)
-    {
+  public async Task<List<ReservationResponse>> GetByDateAsync(DateOnly date)
+  {
         var reservations = await _reservationRepository.GetByDateAsync(date);
         
         return reservations.Select(ReservationMapper.ToResponse).ToList();
+  }
+
+   public async Task DeleteAsync(Guid id)
+   {
+        var exists = await _reservationRepository.ExistsAsync(id);
+        
+        if (!exists)
+        {
+            throw new KeyNotFoundException($"Reservation with id {id} not found.");
+        }
+
+        await _reservationRepository.DeleteAsync(id);
     }
 }
