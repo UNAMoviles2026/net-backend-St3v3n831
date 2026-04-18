@@ -15,6 +15,8 @@ namespace reservations_api.Models.Entities
 
         public TimeOnly EndTime { get; set; }
 
+        public Guid ClassroomId { get; set; }
+
         public Classroom Classroom { get; set; } = null!;
 
     }
