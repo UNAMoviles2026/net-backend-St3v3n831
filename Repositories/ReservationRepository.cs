@@ -35,4 +35,23 @@ public class ReservationRepository : IReservationRepository
         .Include(r => r.Classroom)            
         .ToListAsync();
   }
+
+  public async Task<bool> ExistsAsync(Guid id)
+  {
+        return await _context.Reservations.AnyAsync(r => r.Id == id);
+  } 
+
+  public async Task DeleteAsync(Guid id)
+  {
+        var reservation = await _context.Reservations.FindAsync(id);
+        
+        if (reservation != null)
+        {
+            _context.Reservations.Remove(reservation);
+            await _context.SaveChangesAsync();
+        }
+  }
+
+
+
 }
