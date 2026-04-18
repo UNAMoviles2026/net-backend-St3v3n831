@@ -43,6 +43,42 @@ namespace reservations_api.Migrations
 
                     b.ToTable("Classrooms");
                 });
+
+            modelBuilder.Entity("reservations_api.Models.Entities.Reservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClassroomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassroomId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("reservations_api.Models.Entities.Reservation", b =>
+                {
+                    b.HasOne("reservations_api.Models.Entities.Classroom", "Classroom")
+                        .WithMany()
+                        .HasForeignKey("ClassroomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Classroom");
+                });
 #pragma warning restore 612, 618
         }
     }

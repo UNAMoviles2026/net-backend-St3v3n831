@@ -12,8 +12,8 @@ using reservations_api.Data;
 namespace reservations_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260327024925_Init")]
-    partial class Init
+    [Migration("20260418085536_CreateReservation")]
+    partial class CreateReservation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,42 @@ namespace reservations_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Classrooms");
+                });
+
+            modelBuilder.Entity("reservations_api.Models.Entities.Reservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClassroomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassroomId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("reservations_api.Models.Entities.Reservation", b =>
+                {
+                    b.HasOne("reservations_api.Models.Entities.Classroom", "Classroom")
+                        .WithMany()
+                        .HasForeignKey("ClassroomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Classroom");
                 });
 #pragma warning restore 612, 618
         }
