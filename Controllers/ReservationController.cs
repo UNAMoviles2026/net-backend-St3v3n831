@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using reservations_api.DTOs.Requests;
+using reservations_api.DTOs.Responses;
 using reservations_api.Services;
 
 namespace reservations_api.Controllers;
@@ -45,4 +46,17 @@ public class ReservationsController : ControllerBase
       throw;
     }
   }
+
+  [HttpGet("by-date")]
+  public async Task<ActionResult<List<ReservationResponse>>> GetByDate([FromQuery] DateOnly date)
+    {
+        if (date == default)
+        {
+            return BadRequest(new { message = "El parámetro 'date' es requerido y debe tener formato yyyy-MM-dd" });
+        }
+
+        var reservations = await _reservationService.GetByDateAsync(date);
+        
+        return Ok(reservations);
+    }
 }
